@@ -9,10 +9,12 @@ import Cart from './comp/cart'; // Import Cart component
 import Contact from './comp/contact'; // Import Contact component
 import Offers from './comp/offers';
 import About from './comp/about';
+import Checkout from './comp/checkout';
 const App = () => {
   const [cart, setCart] = useState([]);
   const [shop, setShop] = useState(Homeproduct);
   const [search, setSearch] = useState('');
+  const [username, setUsername] = useState('JohnDoe'); // Add username state
 
   const Filter = (category) => {
     const filteredProducts = Homeproduct.filter(product => product.cat === category);
@@ -45,6 +47,13 @@ const App = () => {
     }
   };
 
+  // Create orderDetails to pass to Checkout
+  const orderDetails = {
+    username,
+    cartItems: cart,
+    totalPrice: cart.reduce((total, item) => total + item.qty * item.price, 0)
+  };
+
   return (
     <BrowserRouter>
       <Nav 
@@ -54,13 +63,13 @@ const App = () => {
         allcatefilter={allcatefilter} // Ensure this is passed
       />
       <Routes>
-        <Route path="/" element={<Rout setCart={setCart} cart={cart} shop={shop} addtocart={addtocart} />} />
+        <Route path="/" element={<Rout setCart={setCart} cart={cart} shop={shop} addtocart={addtocart} username={username} />} />
         <Route path="/All-offers" element={<Offers cart={cart} setCart={setCart}/>} />
-        <Route path="/shop" element={<Shop shop={shop} addtocart={addtocart} Filter={Filter} allcatefilter={allcatefilter} />} /> {/* Pass Filter here */}
+        <Route path="/shop" element={<Shop shop={shop} addtocart={addtocart} Filter={Filter} allcatefilter={allcatefilter} />} />
         <Route path="/cart" element={<Cart cart={cart} setCart={setCart} />} />
         <Route path="/contact" element={<Contact />} />
         <Route path='/about' element={<About />} />
-
+        <Route path='/checkout' element={<Checkout orderDetails={orderDetails} />} /> 
       </Routes>
       <Footer />
     </BrowserRouter>
